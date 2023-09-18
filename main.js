@@ -38,7 +38,7 @@ const products = [
     }
 ];
 
-// FACTORY FUNCTION FOR CREATING NEW PRODUCTS //
+// FACTORY FUNCTION - NEW PRODUCTS //
 
 const Product = (code, name, price, BOGOF, {bulk_trigger, discount_price}) => {
 
@@ -60,8 +60,8 @@ let actionPrompt = prompt("ENTER [code], 'tally', 'add' (item) or 'quit'")
     .toUpperCase();
 
 while (actionPrompt != "QUIT") {
-    // .filter array out is always truthy.
-    // Therefore length test ensures item.
+    // .filter array output is always truthy, even if []
+    // Therefore length test ensures item in array and match
     if (products.filter(product => product.code === actionPrompt).length > 0) {
         cart.hasOwnProperty(actionPrompt) ? 
             cart[actionPrompt] +=1 :
@@ -90,33 +90,15 @@ function pickAction() {
     .toUpperCase();
 }
 
-function addProductItem() {
-    const itemCode = prompt("ENTER [code]")
-    .toUpperCase();
-    const itemName = prompt("ENTER [name]")
-    .toLowerCase();
-    const itemPrice = parseInt(prompt("ENTER [price]"));
-    const itemBOGOF= prompt("ENTER [BOGOF]", "true or false")
-    .toLowerCase();
-    const itemBulkTrig = prompt("ENTER [bulk trigger]", "null or quantity");
-    const itemBulkPrice = prompt("ENTER [bulk price]", "null or price");
-    
-    const newProduct = Product(
-        itemCode,
-        itemName,
-        itemPrice,
-        itemBOGOF,
-        {bulk_trigger: itemBulkTrig, discount_price: itemBulkPrice}
-    )
-    products.push(newProduct);
-    console.log(products);
-}
+// TALLY CART //
 
 function tallyCart() {
     alert("Adding items");
     let totalAllItems = 0;
-    console.log(cart);
+    
     for (const item in cart) {
+        // [0]/index to remove array brackets from 
+        // product item
         const itemRecord = products.filter(product =>
             product.code === item)[0];
         if (itemRecord.BOGOF) {
@@ -128,6 +110,8 @@ function tallyCart() {
             totalAllItems += totalBOGOF;
             console.log(`${totalBOGOF} (${cart[item]})`);
         } else {
+            // Item value always evaluates > null so need 
+            // first part of condition statement (short circuits)
             if (itemRecord.bulk.bulk_trigger != null && cart[item] >= 
                     itemRecord.bulk.bulk_trigger) {
                 console.log(`${itemRecord.name} get a discount!`);
@@ -155,3 +139,37 @@ function bulkCalc({quantity, price}) {
     return quantity * price;
 
 };
+
+// ADD PRODUCTS //
+function addProductItem() {
+    const itemCode = prompt("ENTER [code]")
+    .toUpperCase();
+    const itemName = prompt("ENTER [name]")
+    .toLowerCase();
+    const itemPrice = parseInt(prompt("ENTER [price]"));
+    const itemBOGOF= prompt("ENTER [BOGOF]", "true or false")
+    .toLowerCase();
+    const itemBulkTrig = prompt("ENTER [bulk trigger]", "null or quantity");
+    const itemBulkPrice = prompt("ENTER [bulk price]", "null or price");
+    
+    const newProduct = Product(
+        itemCode,
+        itemName,
+        itemPrice,
+        itemBOGOF,
+        {bulk_trigger: itemBulkTrig, discount_price: itemBulkPrice}
+    )
+    products.push(newProduct);
+    console.log(products);
+}
+
+// IMPROVEMENTS
+// 1. DEBUG - Factory function has incorrect types e.g. boolean as string; 
+//    always evaluates to true e.g. BOGOF: "false"; 
+// 2. REFACTOR - Use switch statements instead of embedded if/else.
+// 3. ...Use module pattern(s) to prevent e.g. direct access to products array
+//    and preserve global namespace.
+// 4. ...Take more OOP approach e.g. parent Product class with
+//    methods for offers.
+// 5. ...Build out using ES6 modules and separate data, controller, UI/view.
+//    Use pubSub type pattern so modules independent of each other.
