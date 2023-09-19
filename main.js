@@ -147,8 +147,10 @@ function addProductItem() {
     const itemName = prompt("ENTER [name]")
     .toLowerCase();
     const itemPrice = parseInt(prompt("ENTER [price]"));
-    const itemBOGOF= prompt("ENTER [BOGOF]", "true or false")
+    const stringBOGOF = prompt("ENTER [BOGOF]", "true or false")
     .toLowerCase();
+    const itemBOGOF = (stringBOGOF === "true");
+    // BUG - Fix type ***
     const itemBulkTrig = prompt("ENTER [bulk trigger]", "null or quantity");
     const itemBulkPrice = prompt("ENTER [bulk price]", "null or price");
     
@@ -164,12 +166,10 @@ function addProductItem() {
 }
 
 // IMPROVEMENTS
-// 1. DEBUG - Factory function has incorrect types e.g. boolean as string; 
-//    always evaluates to true e.g. BOGOF: "false"; 
-// 2. REFACTOR - Use switch statements instead of embedded if/else.
-// 3. ...Use module pattern(s) to prevent e.g. direct access to products array
-//    and preserve global namespace.
-// 4. ...Take more OOP approach e.g. parent Product class with
-//    methods for offers.
-// 5. ...Build out using ES6 modules and separate data, controller, UI/view.
+// 1. Take more OOP approach e.g. cart Class/Factory Function
+//    with methods for adding products, tally,  offers etc.
+// 2. Use revealing module pattern(s) to prevent e.g. direct access to products array.
+//    Functions to get/set etc.
+// 3. Use switch statements instead of embedded if/else.
+// 4. Build out using ES6 modules and separate data, controller, UI/view.
 //    Use pubSub type pattern so modules independent of each other.
